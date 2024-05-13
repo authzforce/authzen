@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
  *         <li><a href="https://github.com/openid/authzen/blob/main/api/authorization-api-1_0.md#access-evaluations-api">Access Evaluation API</a></li>
  *         <li><a href="https://www.postman.com/axiomatics/workspace/authzen-sample-requests/">AuthZEN Sample Request/Response Collection</a></li>
  *     </ul>
- * </p>
  *
  */
 public final class OpenIDAuthZenAccessEvaluationResultPostprocessorFactory implements DecisionResultPostprocessor.Factory<IndividualXacmlJsonRequest, JSONObject> {
