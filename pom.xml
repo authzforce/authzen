@@ -7,7 +7,7 @@
 		<version>9.0.0</version>
 	</parent>
 	<artifactId>authzforce-pdp-ext-openid-authzen</artifactId>
-	<version>0.1.1-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<name>org.ow2.authzforce:${project.artifactId}</name>
 	<description>AuthzForce CE - PDP extensions for OpenID AuthZen API support</description>
 	<properties>
