@@ -1,0 +1,11 @@
+{
+  "subject": {
+    "identity": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+  },
+  "action": {
+    "name": "can_read_todos"
+  },
+  "resource": {
+    "type": "todo"
+  }
+}

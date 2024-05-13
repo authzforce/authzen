@@ -1,0 +1,6 @@
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="root" Version="1.0" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit">
+	<Target />
+	<Rule RuleId="default" Effect="Permit">
+		<Target/>
+	</Rule>
+</Policy>

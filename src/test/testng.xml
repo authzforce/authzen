@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="AuthZEN Identiverse 2024 Interop" verbose="3">
+	<!-- Path to the PDP configuration file, relative to the Maven project root  -->
+	<parameter name="pdp_config_path" value="src/test/resources/AuthZEN_Identiverse_2024_Interop/pdp.xml" />
+	<test name="Rick" enabled="true">
+		<!-- Path to parent directory of test directories, relative to the Maven project root, where each test directory contains a AuthZen Access Evaluation request (JSON) file and expected response file for a single test  -->
+		<parameter name="test_root_dir" value="src/test/resources/AuthZEN_Identiverse_2024_Interop/Rick" />
+		<classes>
+			<class name="org.ow2.authzforce.pdp.ext.openid.authzen.test.AuthZenAccessEvaluationTest" />
+		</classes>
+	</test>
+	<test name="Morty" enabled="true">
+		<parameter name="test_root_dir" value="src/test/resources/AuthZEN_Identiverse_2024_Interop/Morty" />
+		<classes>
+			<class name="org.ow2.authzforce.pdp.ext.openid.authzen.test.AuthZenAccessEvaluationTest" />
+		</classes>
+	</test>
+	<test name="Summer Smith" enabled="true">
+		<parameter name="test_root_dir" value="src/test/resources/AuthZEN_Identiverse_2024_Interop/Summer_Smith" />
+		<classes>
+			<class name="org.ow2.authzforce.pdp.ext.openid.authzen.test.AuthZenAccessEvaluationTest" />
+		</classes>
+	</test>
+</suite>

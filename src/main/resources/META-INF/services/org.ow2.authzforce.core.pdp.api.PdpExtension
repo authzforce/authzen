@@ -1,0 +1,2 @@
+org.ow2.authzforce.pdp.ext.openid.authzen.OpenIDAuthZenAccessEvaluationRequestPreprocessorFactory
+org.ow2.authzforce.pdp.ext.openid.authzen.OpenIDAuthZenAccessEvaluationResultPostprocessorFactory
