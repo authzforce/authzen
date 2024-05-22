@@ -1,0 +1,12 @@
+FROM authzforce/restful-pdp:latest
+LABEL maintainer="AuthzForce Team"
+LABEL org.label-schema.schema-version="1.0"
+LABEL org.label-schema.vendor="THALES"
+LABEL org.label-schema.name="AuthzForce RESTful PDP"
+# LABEL org.label-schema.description=""
+
+# Guidelines: https://spring.io/guides/gs/spring-boot-docker/
+
+ARG AUTHZFORCE_AUTHZEN_JAR_VERSION
+ENV JAR_URL="https://repo1.maven.org/maven2/org/ow2/authzforce/authzforce-pdp-ext-openid-authzen/${AUTHZFORCE_AUTHZEN_JAR_VERSION}/authzforce-pdp-ext-openid-authzen-${AUTHZFORCE_AUTHZEN_JAR_VERSION}.jar"
+RUN mkdir /home/spring/extensions && wget ${JAR_URL} -P /home/spring/extensions

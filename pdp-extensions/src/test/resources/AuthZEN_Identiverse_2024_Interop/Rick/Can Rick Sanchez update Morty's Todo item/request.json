@@ -1,0 +1,12 @@
+{
+  "subject": {
+    "identity": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+  },
+  "action": {
+    "name": "can_update_todo"
+  },
+  "resource": {
+    "type": "todo",
+    "ownerID": "morty@the-citadel.com"
+  }
+}

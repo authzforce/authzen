@@ -1,0 +1,12 @@
+{
+  "subject": {
+    "identity": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+  },
+  "action": {
+    "name": "can_read_user"
+  },
+  "resource": {
+    "type": "user",
+    "userID": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+  }
+}

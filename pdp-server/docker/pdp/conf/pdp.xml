@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pdp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://authzforce.github.io/core/xmlns/pdp/8" version="8.1" maxVariableRefDepth="10" maxPolicyRefDepth="10">
+	<attributeDatatype>urn:ow2:authzforce:feature:pdp:datatype:json</attributeDatatype>
+	<function>urn:ow2:authzforce:feature:pdp:function:string-from-json-path</function>
+	<policyProvider id="rootPolicyProvider" xsi:type="StaticPolicyProvider">
+		<policyLocation>${PARENT_DIR}/policies/*.xml</policyLocation>
+	</policyProvider>
+	<!-- Must match the Policy(Set)Id of one of the Policies/PolicySets provided by the 'policyProvider', the one with which the PDP starts the evaluation (root policy).  -->
+	<rootPolicyRef>AuthZEN_Interop</rootPolicyRef>
+	<ioProcChain>
+		<!-- XACML/XML processing chain. Replace requestPreproc value with "urn:ow2:authzforce:feature:pdp:request-preproc:xacml-xml:multiple:repeated-attribute-categories-lax" for Multiple Decision Profile 
+			support. -->
+		<requestPreproc>urn:ow2:authzforce:feature:pdp:request-preproc:xacml-xml:default-lax</requestPreproc>
+	</ioProcChain>
+	<ioProcChain>
+		<!-- Only one processing chain per input type (e.g. JSON) may be enabled at a time. -->
+		<!-- OpenID AuthZEN Access Evaluation API JSON processing chain. -->
+		<requestPreproc>urn:ow2:authzforce:feature:pdp:request-preproc:openid-authzen</requestPreproc>
+		<resultPostproc>urn:ow2:authzforce:feature:pdp:result-postproc:openid-authzen</resultPostproc>
+	</ioProcChain>
+	<!-- If you want to enable XACML/JSON Profile support instead of OpenID AuthZEN, uncomment the ioProcChain below and comment out the previous one. Only one or the other may be enabled. -->
+	<!--
+	<ioProcChain>
+		<requestPreproc>urn:ow2:authzforce:feature:pdp:request-preproc:xacml-json:default-lax</requestPreproc>
+		<resultPostproc>urn:ow2:authzforce:feature:pdp:result-postproc:xacml-json:default</resultPostproc>
+	</ioProcChain>
+	-->
+</pdp>

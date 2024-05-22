@@ -1,0 +1,226 @@
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="root" Version="1.0"
+		RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit">
+	<Target/>
+	<!-- Constant variables first -->
+	<!-- Action names in the requests of the AuthZEN Interop scenario are the same as the permission names with 'can_...' prefix which does not make sense, but that's the way they are defined:
+	  https://authzen-interop.net/docs/scenarios/todo#overview-of-the-scenario
+	  For instance for permission 'can_read_user', the action name should be simply 'read_user'-->
+	<VariableDefinition VariableId="READ_ACTION_NAMES">
+		<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+			<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">can_read_todos</AttributeValue>
+			<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">can_read_user</AttributeValue>
+		</Apply>
+	</VariableDefinition>
+	<VariableDefinition VariableId="DELETE_ACTION_NAME">
+		<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">can_delete_todo</AttributeValue>
+	</VariableDefinition>
+	<VariableDefinition VariableId="UPDATE_ACTION_NAME">
+		<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">can_update_todo</AttributeValue>
+	</VariableDefinition>
+	<VariableDefinition VariableId="UPDATE_DELETE_ACTION_NAMES">
+		<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+			<VariableReference VariableId="UPDATE_ACTION_NAME"/>
+			<VariableReference VariableId="DELETE_ACTION_NAME"/>
+		</Apply>
+	</VariableDefinition>
+	<VariableDefinition VariableId="CREATE_ACTION_NAME">
+		<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">can_create_todo</AttributeValue>
+	</VariableDefinition>
+
+	<VariableDefinition VariableId="VIEWER_ROLE_NAME">
+		<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">viewer</AttributeValue>
+	</VariableDefinition>
+	<VariableDefinition VariableId="EDITOR_ROLE_NAME">
+		<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">editor</AttributeValue>
+	</VariableDefinition>
+	<VariableDefinition VariableId="ADMIN_ROLE_NAME">
+		<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">admin</AttributeValue>
+	</VariableDefinition>
+	<VariableDefinition VariableId="EVIL_GENIUS_ROLE_NAME">
+		<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">evil_genius</AttributeValue>
+	</VariableDefinition>
+
+	<!-- User attributes in JSON from https://github.com/openid/authzen/blob/main/interop/authzen-interop-website/docs/scenarios/todo.md -->
+	<VariableDefinition VariableId="USER_ACCOUNTS_JSON">
+		<AttributeValue DataType="urn:ow2:authzforce:feature:pdp:datatype:json">
+			{
+			"CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs": {
+			"id": "rick@the-citadel.com",
+			"name": "Rick Sanchez",
+			"email": "rick@the-citadel.com",
+			"roles": ["admin", "evil_genius"],
+			"picture": "https://www.topaz.sh/assets/templates/citadel/img/Rick%20Sanchez.jpg"
+			},
+			"CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs": {
+			"id": "beth@the-smiths.com",
+			"name": "Beth Smith",
+			"email": "beth@the-smiths.com",
+			"roles": ["viewer"],
+			"picture": "https://www.topaz.sh/assets/templates/citadel/img/Beth%20Smith.jpg"
+			},
+			"CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs": {
+			"id": "morty@the-citadel.com",
+			"name": "Morty Smith",
+			"email": "morty@the-citadel.com",
+			"roles": ["editor"],
+			"picture": "https://www.topaz.sh/assets/templates/citadel/img/Morty%20Smith.jpg"
+			},
+			"CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs": {
+			"id": "summer@the-smiths.com",
+			"name": "Summer Smith",
+			"email": "summer@the-smiths.com",
+			"roles": ["editor"],
+			"picture": "https://www.topaz.sh/assets/templates/citadel/img/Summer%20Smith.jpg"
+			},
+			"CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs": {
+			"id": "jerry@the-smiths.com",
+			"name": "Jerry Smith",
+			"email": "jerry@the-smiths.com",
+			"roles": ["viewer"],
+			"picture": "https://www.topaz.sh/assets/templates/citadel/img/Jerry%20Smith.jpg"
+			}
+			}
+		</AttributeValue>
+	</VariableDefinition>
+
+	<!-- Request context variables -->
+	<!-- The JSON Path to a given attribute x of the subject in the user_attributes (JSON) variable is:
+			$.the_subject_identity.x
+		where the "the_subject.identity" is the subject.identity attribute from the request which should match one of the BASE64-encoded identifiers in the user_attributes.
+		The variable 'subject_attribute_jsonpath_prefix' is set to the part of the JSON path before 'x'.   -->
+	<VariableDefinition VariableId="subject_attribute_jsonpath_prefix">
+		<Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:string-concatenate">
+			<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">$.["</AttributeValue>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+				<AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="identity"
+									 DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+			</Apply>
+			<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">"].</AttributeValue>
+		</Apply>
+	</VariableDefinition>
+	<!-- Get the subject roles via JSON path. -->
+	<VariableDefinition VariableId="subject_roles">
+		<Apply FunctionId="urn:ow2:authzforce:feature:pdp:function:string-from-json-path">
+			<VariableReference VariableId="USER_ACCOUNTS_JSON"/>
+			<!-- The JSON Path: ${subject_attribute_jsonpath_prefix}roles -->
+			<Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:string-concatenate">
+				<VariableReference VariableId="subject_attribute_jsonpath_prefix"/>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">roles</AttributeValue>
+			</Apply>
+		</Apply>
+	</VariableDefinition>
+	<!-- Get the subject ID via JSON path. -->
+	<VariableDefinition VariableId="subject_ids">
+		<Apply FunctionId="urn:ow2:authzforce:feature:pdp:function:string-from-json-path">
+			<VariableReference VariableId="USER_ACCOUNTS_JSON"/>
+			<!-- The JSON Path: ${subject_attribute_jsonpath_prefix}id -->
+			<Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:string-concatenate">
+				<VariableReference VariableId="subject_attribute_jsonpath_prefix"/>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">id</AttributeValue>
+			</Apply>
+		</Apply>
+	</VariableDefinition>
+
+	<!-- Request action.name attribute is used multiple times in permissions, create a variable for reuse/optimisation. -->
+	<VariableDefinition VariableId="action_names">
+		<AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="name" DataType="http://www.w3.org/2001/XMLSchema#string"
+							 MustBePresent="false"/>
+	</VariableDefinition>
+
+	<!-- We could use the RBAC Profile of XACML with PolicySets for each role and Policy(Set)IdReferences to implement inheritance, but this would require to re-declare the above variables in each PolicySet, which is overkill.
+	 Hopefully this should be solved in XACML 4.0 as addressed by these issues:
+		https://github.com/oasis-tcs/xacml-spec/issues/4
+	 	https://github.com/oasis-tcs/xacml-spec/issues/11
+
+	 	As a workaround, we use Variables to store/reuse the result of evaluating junior roles' permissions.
+	 -->
+	<VariableDefinition VariableId="matches_viewer_role_permissions">
+		<!-- viewer role permissions: action 'can_read_todos' || action 'can_read_user' -->
+		<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+			<VariableReference VariableId="READ_ACTION_NAMES"/>
+			<VariableReference VariableId="action_names"/>
+		</Apply>
+	</VariableDefinition>
+
+	<VariableDefinition VariableId="matches_editor_role_permissions">
+		<!-- editor role permissions: viewer permissions || action 'can_create_todo' || (action 'can_update_todo' or 'can_delete_todo') AND subject.id = resource.ownerID -->
+		<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+			<VariableReference VariableId="matches_viewer_role_permissions"/>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+				<VariableReference VariableId="CREATE_ACTION_NAME"/>
+				<VariableReference VariableId="action_names"/>
+			</Apply>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+					<VariableReference VariableId="UPDATE_DELETE_ACTION_NAMES"/>
+					<VariableReference VariableId="action_names"/>
+				</Apply>
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+					<VariableReference VariableId="subject_ids"/>
+					<AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="ownerID"
+										 DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+				</Apply>
+			</Apply>
+		</Apply>
+	</VariableDefinition>
+
+	<Rule RuleId="viewer_role" Effect="Permit">
+		<Condition>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+					<VariableReference VariableId="VIEWER_ROLE_NAME"/>
+					<VariableReference VariableId="subject_roles"/>
+				</Apply>
+				<VariableReference VariableId="matches_viewer_role_permissions"/>
+			</Apply>
+		</Condition>
+	</Rule>
+
+	<Rule RuleId="editor_role" Effect="Permit">
+		<Condition>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+					<VariableReference VariableId="EDITOR_ROLE_NAME"/>
+					<VariableReference VariableId="subject_roles"/>
+				</Apply>
+				<VariableReference VariableId="matches_editor_role_permissions"/>
+			</Apply>
+		</Condition>
+	</Rule>
+
+	<Rule RuleId="admin_role" Effect="Permit">
+		<Condition>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+					<VariableReference VariableId="ADMIN_ROLE_NAME"/>
+					<VariableReference VariableId="subject_roles"/>
+				</Apply>
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+					<VariableReference VariableId="matches_editor_role_permissions"/>
+					<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+						<VariableReference VariableId="DELETE_ACTION_NAME"/>
+						<VariableReference VariableId="action_names"/>
+					</Apply>
+				</Apply>
+			</Apply>
+		</Condition>
+	</Rule>
+
+	<Rule RuleId="evil_genius_role" Effect="Permit">
+		<Condition>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+					<VariableReference VariableId="EVIL_GENIUS_ROLE_NAME"/>
+					<VariableReference VariableId="subject_roles"/>
+				</Apply>
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+					<VariableReference VariableId="matches_editor_role_permissions"/>
+					<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+						<VariableReference VariableId="UPDATE_ACTION_NAME"/>
+						<VariableReference VariableId="action_names"/>
+					</Apply>
+				</Apply>
+			</Apply>
+		</Condition>
+	</Rule>
+</Policy>
