@@ -1,16 +1,16 @@
 [![](https://img.shields.io/badge/tag-authzforce-orange.svg?logo=stackoverflow)](http://stackoverflow.com/questions/tagged/authzforce)
 [![Docker badge](https://img.shields.io/docker/pulls/authzforce/authzen-pdp.svg)](https://hub.docker.com/r/authzforce/authzen-pdp/)
-[![Build Status](https://github.com/authzforce/authzen/actions/workflows/maven.yml/badge.svg?branch=develop)](https://github.com/authzforce/restful-pdp/actions/workflows/maven.yml)
+[![Build Status](https://github.com/authzforce/authzen/actions/workflows/maven.yml/badge.svg?branch=develop)](https://github.com/authzforce/authzen/actions/workflows/maven.yml)
 
 # AuthzForce RESTful PDP server providing OpenID AuthZEN Access Evaluation API support
 
 This is based on [AuthzForce RESTful PDP](http://github.com/authzforce/restful-pdp) with extensions to support OpenID AuthZEN API.
 
 In particular, the project provides the following (Maven groupId:artifactId):
-* `org.ow2.authzforce:authzforce-authzen-pdp-server`: a fully executable RESTful PDP server (runnable from the command-line), packaged as a [Spring Boot application](https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html) or [Docker image](https://hub.docker.com/repository/docker/authzforce/restful-pdp) (see the [Docker Compose example](pdp-server/docker) for usage) providing AuthZEN API.
+* `org.ow2.authzforce:authzforce-authzen-pdp-server`: a fully executable RESTful PDP server (runnable from the command-line), packaged as a [Spring Boot application](https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html) or [Docker image](https://hub.docker.com/repository/docker/authzforce/authzen-pdp) (see the [Docker Compose example](pdp-server/docker) for usage) providing AuthZEN API.
 * `org.ow2.authzforce:authzforce-authzen-pdp-extensions`: PDP extensions that can be plugged into [AuthzForce Core PDP](http://github.com/authzforce/core) engine to support AuthZEN JSON payloads (like XACML/JSON Profile's payloads), and that are used in the RESTful PDP server.
 
-**Go to the [releases](https://github.com/authzforce/authzen/releases) page for
+**(First release planned in June 2024!) Go to the [releases](https://github.com/authzforce/authzen/releases) page for
 specific release info: downloads (Linux packages), Docker image,
 [release notes](CHANGELOG.md)**
 
@@ -29,7 +29,7 @@ Launch the PDP with either Docker or the executable JAR as described in the next
 
 ### Using Docker
 
-Git clone this github repository or download the Source code ZIP from the [latest release](https://github.com/authzforce/restful-pdp/releases) and unzip it, then from the git clone / unzipped folder, go to the [`docker`](pdp-server/docker) directory.
+Git clone this github repository or download the Source code ZIP from the [latest release](https://github.com/authzforce/authzen/releases) (**First release planned in June 2024!**) and unzip it, then from the git clone / unzipped folder, go to the [`docker`](pdp-server/docker) directory.
 
 If you wish to use a different XACML Policy from the default, make sure your policy file is in the `pdp/conf/policies` folder and set the `rootPolicyRef` to that policy ID in the PDP configuration file `pdp/conf/pdp.xml`.
 
@@ -39,7 +39,7 @@ Then run: `docker compose up -d`, then `docker compose logs` to check the PDP is
 
 ### Using the executable JAR
 
-Get the [latest executable jar](https://repo1.maven.org/maven2/org/ow2/authzforce/authzforce-ce-restful-pdp-cxf-spring-boot-server/) from Maven Central with groupId/artifactId = `org.ow2.authzforce`/`authzforce-authzen-pdp-server`. The name of the JAR is `authzforce-authzen-pdp-server-M.m.p.jar` (replace `M.m.p` with the latest version).
+Get the latest release's **(First release planned in June 2024!)** [executable JAR](https://repo1.maven.org/maven2/org/ow2/authzforce/authzforce-authzen-pdp-server/) from Maven Central with groupId/artifactId = `org.ow2.authzforce`/`authzforce-authzen-pdp-server`; or build it from the source by running `mvn install` (the JAR will be located in `pdp-server/target` folder). The name of the JAR is `authzforce-authzen-pdp-server-M.m.p.jar` (replace `M.m.p` with the latest version).
 
 Make sure it is executable (replace `M.m.p` with the current version):
 
@@ -85,10 +85,10 @@ You should get a JSON response such as:
 If you are missing features in AuthzForce, you can extend it with various types of plugins (without changing the existing code) the same way you do for the RESTful PDP, so please refer to the [RESTful PDP project's README](https://github.com/authzforce/restful-pdp?tab=readme-ov-file#extensions) for the instructions. 
 
 ## Vulnerability reporting
-If you want to report a vulnerability, you must do so on the [OW2 Issue Tracker](https://gitlab.ow2.org/authzforce/restful-pdp/issues) and when creating the issue, check the box labeled **"This issue is confidential and should only be visible to team members with at least Reporter access"**. Then, if the AuthzForce team can confirm it, they will make it public and set a fix version.
+If you want to report a vulnerability, please follow the [GitHub procedure for private vulnerability reporting](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability#privately-reporting-a-security-vulnerability).
 
 ## Support
-If you are experiencing any issue with this project except for vulnerabilities mentioned previously, please report it on the [GitHub Issue Tracker](https://github.com/authzforce/restful-pdp/issues).
+If you are experiencing any issue with this project except for vulnerabilities mentioned previously, please report it on the [GitHub Issue Tracker](https://github.com/authzforce/authzen/issues).
 Please include as much information as possible; the more we know, the better the chance of a quicker resolution:
 
 * Software version
