@@ -72,9 +72,9 @@ public class AuthZenPdpServerAccessEvaluationTest
 	@LocalServerPort
 	private int port;
 
-	private static Stream<Arguments> getTestDirectories() throws Exception {
-		File[] test0Dirs = new File("..").listFiles();
-		return Stream.of(TEST_ROOT_DIRS).flatMap(testRootDir -> Stream.of(new File(testRootDir).listFiles()).filter(f -> f.isDirectory()).map(Arguments::of));
+	private static Stream<Arguments> getTestDirectories()
+	{
+		return Stream.of(TEST_ROOT_DIRS).flatMap(testRootDir -> Stream.of(new File(testRootDir).listFiles()).filter(File::isDirectory).map(Arguments::of));
 	}
 
 	@ParameterizedTest
