@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="AuthZEN Gartner IAM London 2025 Interop" verbose="3">
+	<!-- More info: https://hackmd.io/@oidf-wg-authzen/gartner-london-iam-2025-interop -->
+	<!-- Path to the PDP configuration directory where pdp.xml, catalog.xml and pdp-ext.xsd are located, relative to the Maven project root  -->
+	<parameter name="pdp_config_dir_path" value="src/test/resources/AuthZEN_Gartner_IAM_London_2025_Interop" />
+	<test name="Rick" enabled="true">
+		<!-- Path to parent directory of test directories, relative to the Maven project root, where each test directory contains a AuthZen Access Evaluation request (JSON) file and expected response file for a single test  -->
+		<parameter name="test_root_dir" value="src/test/resources/AuthZEN_Gartner_IAM_London_2025_Interop/Rick" />
+		<classes>
+			<class name="org.ow2.authzforce.authzen.pdp.ext.test.AuthZenPdpEngineAccessEvaluationTest" />
+		</classes>
+	</test>
+</suite>

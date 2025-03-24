@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pdp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://authzforce.github.io/core/xmlns/pdp/8" version="8.1" maxVariableRefDepth="10" maxPolicyRefDepth="10">
-	<attributeDatatype>urn:ow2:authzforce:feature:pdp:datatype:json</attributeDatatype>
-	<function>urn:ow2:authzforce:feature:pdp:function:string-from-json-path</function>
+<pdp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://authzforce.github.io/core/xmlns/pdp/8"
+	 xmlns:ext="http://authzforce.github.io/authzen/xmlns/ext/1" version="8.1" maxVariableRefDepth="10" maxPolicyRefDepth="10">
+	<attributeProvider id="pip" xsi:type="ext:JsonObjectAttributeProviderDescriptor" jsonFileLocation="${PARENT_DIR}/users.json">
+		<ext:key Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true" />
+	</attributeProvider>
 	<policyProvider id="rootPolicyProvider" xsi:type="StaticPolicyProvider">
 		<policyLocation>${PARENT_DIR}/policies/*.xml</policyLocation>
 	</policyProvider>
 	<!-- Must match the Policy(Set)Id of one of the Policies/PolicySets provided by the 'policyProvider', the one with which the PDP starts the evaluation (root policy).
 	 This is not required if there is only one Policy(Set) provided.
 	 -->
-	<!--<rootPolicyRef>AuthZEN_Interop</rootPolicyRef>-->
+	<rootPolicyRef>AuthZEN_Interop_2025</rootPolicyRef>
 	<ioProcChain>
 		<!-- XACML/XML processing chain. Replace requestPreproc value with "urn:ow2:authzforce:feature:pdp:request-preproc:xacml-xml:multiple:repeated-attribute-categories-lax" for Multiple Decision Profile 
 			support. -->

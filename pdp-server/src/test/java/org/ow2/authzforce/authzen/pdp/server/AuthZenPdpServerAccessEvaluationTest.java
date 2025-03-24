@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2024 THALES.
+ * Copyright (C) 2012-2025 THALES.
  *
  * This file is part of AuthzForce CE.
  *
@@ -59,7 +59,13 @@ public class AuthZenPdpServerAccessEvaluationTest
 
 	private static final int MAX_JSON_DEPTH = 10;
 
-	private static final String[] TEST_ROOT_DIRS = {"../pdp-extensions/src/test/resources/AuthZEN_Identiverse_2024_Interop/Morty", "../pdp-extensions/src/test/resources/AuthZEN_Identiverse_2024_Interop/Rick", "../pdp-extensions/src/test/resources/AuthZEN_Identiverse_2024_Interop/Summer_Smith"};
+	// AuthZEN_Identiverse_2024_Interop
+	//private static final String[] TEST_ROOT_DIRS = {"../pdp-extensions/src/test/resources/AuthZEN_Identiverse_2024_Interop/Morty", "../pdp-extensions/src/test/resources/AuthZEN_Identiverse_2024_Interop/Rick", "../pdp-extensions/src/test/resources/AuthZEN_Identiverse_2024_Interop/Summer_Smith"};
+
+	// AuthZEN_Gartner_IAM_London_2025_Interop
+	private static final String[] TEST_ROOT_DIRS = {"../pdp-extensions/src/test/resources/AuthZEN_Gartner_IAM_London_2025_Interop/Rick"};
+
+
 
 	@BeforeAll
 	public static void setup()

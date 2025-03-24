@@ -10,7 +10,7 @@ In particular, the project provides the following (Maven groupId:artifactId):
 * `org.ow2.authzforce:authzforce-authzen-pdp-server`: a fully executable RESTful PDP server (runnable from the command-line), packaged as a [Spring Boot application](https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html) or [Docker image](https://hub.docker.com/repository/docker/authzforce/authzen-pdp) (see the [Docker Compose example](pdp-server/docker) for usage) providing AuthZEN API.
 * `org.ow2.authzforce:authzforce-authzen-pdp-extensions`: PDP extensions that can be plugged into [AuthzForce Core PDP](http://github.com/authzforce/core) engine to support AuthZEN JSON payloads (like XACML/JSON Profile's payloads), and that are used in the RESTful PDP server.
 
-**(First release planned in June 2024!) Go to the [releases](https://github.com/authzforce/authzen/releases) page for
+**Go to the [releases](https://github.com/authzforce/authzen/releases) page for
 specific release info: downloads (Linux packages), Docker image,
 [release notes](CHANGELOG.md)**
 
@@ -29,7 +29,7 @@ Launch the PDP with either Docker or the executable JAR as described in the next
 
 ### Using Docker
 
-Git clone this github repository or download the Source code ZIP from the [latest release](https://github.com/authzforce/authzen/releases) (**First release planned in June 2024!**) and unzip it, then from the git clone / unzipped folder, go to the [`docker`](pdp-server/docker) directory.
+Git clone this github repository or download the Source code ZIP from the [latest release](https://github.com/authzforce/authzen/releases) and unzip it, then from the git clone / unzipped folder, go to the [`docker`](pdp-server/docker) directory.
 
 If you wish to use a different XACML Policy from the default, make sure your policy file is in the `pdp/conf/policies` folder and set the `rootPolicyRef` to that policy ID in the PDP configuration file `pdp/conf/pdp.xml`.
 
@@ -39,7 +39,7 @@ Then run: `docker compose up -d`, then `docker compose logs` to check the PDP is
 
 ### Using the executable JAR
 
-Get the latest release's **(First release planned in June 2024!)** [executable JAR](https://repo1.maven.org/maven2/org/ow2/authzforce/authzforce-authzen-pdp-server/) from Maven Central with groupId/artifactId = `org.ow2.authzforce`/`authzforce-authzen-pdp-server`; or build it from the source by running `mvn install` (the JAR will be located in `pdp-server/target` folder). The name of the JAR is `authzforce-authzen-pdp-server-M.m.p.jar` (replace `M.m.p` with the latest version).
+Get the latest release's [executable JAR](https://repo1.maven.org/maven2/org/ow2/authzforce/authzforce-authzen-pdp-server/) from Maven Central with groupId/artifactId = `org.ow2.authzforce`/`authzforce-authzen-pdp-server`; or build it from the source by running `mvn install` (the JAR will be located in `pdp-server/target` folder). The name of the JAR is `authzforce-authzen-pdp-server-M.m.p.jar` (replace `M.m.p` with the latest version).
 
 Make sure it is executable (replace `M.m.p` with the current version):
 

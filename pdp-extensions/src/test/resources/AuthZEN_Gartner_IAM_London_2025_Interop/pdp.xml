@@ -2,9 +2,11 @@
 <!-- Testing parameter 'maxPolicySetRefDepth' -->
 <pdp xmlns="http://authzforce.github.io/core/xmlns/pdp/8"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xmlns:ext="http://authzforce.github.io/authzen/xmlns/ext/1"
 	 version="8.1">
-	<attributeDatatype>urn:ow2:authzforce:feature:pdp:datatype:json</attributeDatatype>
-	<function>urn:ow2:authzforce:feature:pdp:function:string-from-json-path</function>
+	<attributeProvider id="pip" xsi:type="ext:JsonObjectAttributeProviderDescriptor" jsonFileLocation="${PARENT_DIR}/users.json">
+		<ext:key Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true" />
+	</attributeProvider>
 	<policyProvider id="refPolicyprovider" xsi:type="StaticPolicyProvider">
 		<policyLocation>${PARENT_DIR}/policy.xml</policyLocation>
 	</policyProvider>

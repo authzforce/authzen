@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2024 THALES.
+ * Copyright 2012-2025 THALES.
  *
  * This file is part of AuthzForce CE.
  *
@@ -70,14 +70,16 @@ public final class AuthZenPdpEngineAccessEvaluationTest
 
 	/**
 	 * Constructor
-	 * @param pdpConfigRelativePath   Relative path to PDP Configuration file (relative to Maven project root)
+	 * @param pdpConfigDirRelativePath   Relative path to PDP Configuration directory (relative to Maven project root)
 	 */
-	@Parameters({ "pdp_config_path" })
-	public AuthZenPdpEngineAccessEvaluationTest(String pdpConfigRelativePath) throws IOException
+	@Parameters({ "pdp_config_dir_path" })
+	public AuthZenPdpEngineAccessEvaluationTest(String pdpConfigDirRelativePath) throws IOException
 	{
-		final Path pdpConfigPath = Paths.get(pdpConfigRelativePath);
+		final Path pdpConfigPath = Paths.get(pdpConfigDirRelativePath, "pdp.xml");
+		final Path xmlCatalogPath = Paths.get(pdpConfigDirRelativePath, "catalog.xml");
+		final Path pdpExtXsdPath = Paths.get(pdpConfigDirRelativePath, "pdp-ext.xsd");
 
-		final PdpEngineConfiguration pdpEngineConf = PdpEngineConfiguration.getInstance(pdpConfigPath.toString());
+		final PdpEngineConfiguration pdpEngineConf = PdpEngineConfiguration.getInstance(pdpConfigPath.toString(), xmlCatalogPath.toString(), pdpExtXsdPath.toString());
 
 		// Although not used in the tests, we set the XACML/JSON (Profile) in-out adapters as default
 		final DecisionResultPostprocessor<IndividualXacmlJsonRequest, JSONObject> defaultResultPostproc = new BaseXacmlJsonResultPostprocessor(pdpEngineConf.getClientRequestErrorVerbosityLevel());

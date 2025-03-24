@@ -6,4 +6,6 @@
 		</xs:documentation>
 	</xs:annotation>
 	<!-- Do not specify schema locations here. Define the schema locations in the XML catalog instead (see file 'catalog.xml'). -->
+	<!--  Adding JsonObjectAttributeProvider extension -->
+	<xs:import namespace="http://authzforce.github.io/authzen/xmlns/ext/1" />
 </xs:schema>
