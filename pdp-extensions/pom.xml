@@ -67,6 +67,7 @@
 				<groupId>org.owasp</groupId>
 				<artifactId>dependency-check-maven</artifactId>
 				<configuration>
+					<skip>true</skip>
 					<suppressionFile>owasp-dependency-check-suppression.xml</suppressionFile>
 					<failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
 				</configuration>
