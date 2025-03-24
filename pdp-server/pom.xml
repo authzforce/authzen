@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.ow2.authzforce</groupId>
+		<artifactId>authzforce-authzen</artifactId>
+		<version>0.2.0</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>authzforce-authzen-pdp-server</artifactId>
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>AuthzForce - RESTful PDP service providing OpenID AuthZEN-compliant Authorization API</description>
+	<licenses>
+		<license>
+		  <name>GNU General Public License v3.0</name>
+		  <url>https://www.gnu.org/licenses/gpl-3.0-standalone.html</url>
+		</license>
+	  </licenses>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<!--<version>${spring-boot.version}</version>-->
+				<!-- Upgrading Spring boot version to fix CVE-2024-22243,  CVE-2024-22262 -->
+				<version>3.1.11</version>
+				<type>pom</type>
+				<scope>import</scope>
+				<!-- jsonassert depends on com.vaadin.external.google:android-json whose classes conflict with org.json:json; same issue with json-path -->
+				<exclusions>
+					<exclusion>
+						<groupId>org.skyscreamer</groupId>
+						<artifactId>jsonassert</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>com.jayway.jsonpath</groupId>
+						<artifactId>json-path</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<!-- Forcing newer version to fix CVE-2023-35116 (cxf-spring-boot-starter-jaxrs dependency) -->
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>2.17.1</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.ow2.authzforce</groupId>
+			<artifactId>authzforce-authzen-pdp-extensions</artifactId>
+			<version>0.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.authzforce</groupId>
+			<artifactId>authzforce-pdp-ext-json-path</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ow2.authzforce</groupId>
+			<artifactId>authzforce-ce-restful-pdp-jaxrs</artifactId>
+			<version>7.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-features-logging</artifactId>
+			<!--CVE fix: forcing v4.0.4-->
+			<!--<version>${cxf.version}</version> -->
+			<version>4.0.4</version>
+		</dependency>
+		<!-- cxf-spring-boot-starter-jaxrs:4.0.4 depends on spring-boot-starter:3.0.13 depends on snakeyaml:1.33 by default, which is affected by several CVES, fixed only in snakeyaml:2.0 and above
+		 So we are forcing snakeyaml:2.0+ version.
+		 -->
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
+			<!--CVE fix: forcing v4.0.4 -->
+			<!--<version>${cxf.version}</version> -->
+			<version>4.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>${spring-boot.version}</version>
+			<scope>test</scope>
+			<!-- jsonassert depends on com.vaadin.external.google:android-json whose classes conflict with org.json:json; same issue with json-path -->
+			<exclusions>
+				<exclusion>
+					<groupId>org.skyscreamer</groupId>
+					<artifactId>jsonassert</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.jayway.jsonpath</groupId>
+					<artifactId>json-path</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<!-- Consider combining with Red Hat Victims and OSS Index. More info on Victims vs. Dependency-check: https://bugzilla.redhat.com/show_bug.cgi?id=1388712 -->
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<configuration>
+					<skip>true</skip>
+					<!-- The plugin has numerous issues with version matching, which triggers false positives so we need a "suppresion" file for those. More info: https://github.com/jeremylong/DependencyCheck/issues -->
+					<suppressionFile>owasp-dependency-check-suppression.xml</suppressionFile>
+					<failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<!-- target JDK already set by parent project's maven.compiler.target property -->
+				<configuration>
+					<verbose>true</verbose>
+					<excludeRoots>
+						<excludeRoot>target/generated-sources/xjc</excludeRoot>
+						<excludeRoot>target/generated-test-sources/xjc</excludeRoot>
+					</excludeRoots>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+							<goal>cpd-check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<header>license/thales-gpl.header.txt</header>
+					<includes>
+						<include>src/main/java/org/ow2/authzforce/**</include>
+						<!-- Include test files also -->
+						<include>src/test/java/org/ow2/authzforce/**</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>format-sources-license</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>format</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>format-test-sources-license</id>
+						<phase>process-test-sources</phase>
+						<goals>
+							<goal>format</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<!-- This execution of surefire is overwritten by a default one unless we specify a different version in pluginManagement. -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipAfterFailureCount>1</skipAfterFailureCount>
+					<!-- redirectTestOutputToFile: set this to 'true' to redirect the unit test standard output to a file (found in reportsDirectory/testName-output.txt) -->
+					<redirectTestOutputToFile>false</redirectTestOutputToFile>
+					<systemPropertyVariables>
+						<javax.xml.accessExternalSchema>all</javax.xml.accessExternalSchema>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<!-- <version>2.0.0.M6</version> -->
+				<version>${spring-boot.version}</version>
+				<configuration>
+					<executable>true</executable>
+					<layout>ZIP</layout>
+					<mainClass>org.ow2.authzforce.authzen.pdp.server.AuthZenPdpSpringBootApp</mainClass>
+					<!-- <embeddedLaunchScriptProperties> -->
+					<!-- <inlinedConfScript>src/setenv.sh</inlinedConfScript> -->
+					<!-- </embeddedLaunchScriptProperties> -->
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

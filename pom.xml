@@ -4,136 +4,30 @@
 	<parent>
 		<groupId>org.ow2.authzforce</groupId>
 		<artifactId>authzforce-ce-parent</artifactId>
-		<version>9.0.0</version>
+		<version>9.1.0</version>
 	</parent>
-	<artifactId>authzforce-pdp-ext-openid-authzen</artifactId>
-	<version>0.1.0</version>
-	<name>org.ow2.authzforce:${project.artifactId}</name>
-	<description>AuthzForce CE - PDP extensions for OpenID AuthZen API support</description>
-	<properties>
-		<authzforce-ce-core-pdp.version>21.0.1</authzforce-ce-core-pdp.version>
-	</properties>
-
-	<dependencyManagement>
-		<!-- CVE fixes -->
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-core</artifactId>
-				<version>6.0.19</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-
-	<dependencies>
-		<dependency>
-			<groupId>org.ow2.authzforce</groupId>
-			<artifactId>authzforce-ce-core-pdp-io-xacml-json</artifactId>
-			<version>${authzforce-ce-core-pdp.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ow2.authzforce</groupId>
-			<artifactId>authzforce-ce-core-pdp-engine</artifactId>
-			<version>${authzforce-ce-core-pdp.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>7.10.2</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<!-- Consider combining with Red Hat Victims and OSS Index. More info on Victims vs. Dependency-check: https://bugzilla.redhat.com/show_bug.cgi?id=1388712 -->
-				<groupId>org.owasp</groupId>
-				<artifactId>dependency-check-maven</artifactId>
-				<configuration>
-					<suppressionFile>owasp-dependency-check-suppression.xml</suppressionFile>
-					<failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<!-- target JDK already set by parent project's maven.compiler.target property -->
-				<configuration>
-					<verbose>true</verbose>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>check</goal>
-							<goal>cpd-check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.github.spotbugs</groupId>
-				<artifactId>spotbugs-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.mycila</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<configuration>
-					<header>license/alv2-header.txt</header>
-					<headerDefinitions>
-						<headerDefinition>license/header-defs.xml</headerDefinition>
-					</headerDefinitions>
-					<includes>
-						<include>src/main/java/org/ow2/authzforce/**</include>
-						<!-- Include test files also -->
-						<include>src/test/java/org/ow2/authzforce/**</include>
-					</includes>
-				</configuration>
-				<executions>
-					<execution>
-						<id>format-sources-license</id>
-						<phase>process-sources</phase>
-						<goals>
-							<goal>format</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>format-test-sources-license</id>
-						<phase>process-test-sources</phase>
-						<goals>
-							<goal>format</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<suiteXmlFiles>
-						<suiteXmlFile>src/test/testng.xml</suiteXmlFile>
-					</suiteXmlFiles>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
+	<artifactId>authzforce-authzen</artifactId>
+	<version>0.2.0</version>
+	<packaging>pom</packaging>
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>AuthzForce CE - Parent project of OpenID AuthZEN modules</description>
+	<url>${project.url}</url>
+	<developers>
+		<developer>
+			<name>AuthzForce Team</name>
+			<email>See https://mail.ow2.org/wws/review/authzforce-team</email>
+			<organization>AuthzForce</organization>
+			<organizationUrl>https://github.com/authzforce</organizationUrl>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:${git.url.base}/authzen.git</connection>
+		<developerConnection>scm:git:${git.url.base}/authzen.git</developerConnection>
+		<tag>HEAD</tag>
+		<url>${git.url.base}/authzen</url>
+	</scm>
+	<modules>
+		<module>pdp-extensions</module>
+		<module>pdp-server</module>
+	</modules>
 </project>

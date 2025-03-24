@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Schema version is same as earliest compatible version of authzforce-ce-core -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://authzforce.github.io/authzen/xmlns/ext/1" xmlns="http://authzforce.github.io/core/xmlns/test/3" xmlns:authz-ext="http://authzforce.github.io/xmlns/pdp/ext/3" xmlns:xacml="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" elementFormDefault="qualified" version="1.0">
+    <xs:import namespace="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" />
+    <xs:import namespace="http://authzforce.github.io/xmlns/pdp/ext/3" />
+    <xs:annotation>
+        <xs:documentation xml:lang="en">
+            Data Model (configuration descriptors) for PDP extensions
+        </xs:documentation>
+    </xs:annotation>
+    <xs:complexType name="JsonObjectAttributeProviderDescriptor">
+        <xs:annotation>
+            <xs:documentation>
+                JsonObjectAttributeProvider configuration descriptor.
+                AttributeProvider that provide attribute values converted from properties of a JSON object nested under a given key in a root JSON object.
+
+                 For example, with a root JSON object as follows:
+
+                     {
+                 			"CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs": { "id":
+                 			"rick@the-citadel.com", "name": "Rick Sanchez", "email": "rick@the-citadel.com",
+                 			"roles": ["admin", "evil_genius"], "picture":
+                 			"https://www.topaz.sh/assets/templates/citadel/img/Rick%20Sanchez.jpg" },
+
+                 			"CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs": { "id":
+                 			"beth@the-smiths.com", "name": "Beth Smith", "email": "beth@the-smiths.com", "roles":
+                			["viewer"], "picture":
+                			"https://www.topaz.sh/assets/templates/citadel/img/Beth%20Smith.jpg" },
+                 		    ...
+                 		    }
+
+                and a given key "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs" and requested attribute 'roles' (regardless of the Category),
+                the attribute provider returns the bag of strings ["admin", "evil_genius"].
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="authz-ext:AbstractAttributeProvider">
+                <xs:sequence>
+                    <xs:element name="key" type="xacml:AttributeDesignatorType">
+                        <xs:annotation>
+                            <xs:documentation>
+                                AttributeDesignator of the attribute (to be found in the evaluation context) whose value is used as key in the root JSON object to get the nested JSON object whose properties are to be returned as attribute value(s). DataType must be XACML
+                                string ("http://www.w3.org/2001/XMLSchema#string"). Other
+                                datatypes are not supported.
+
+                                Only attributes in the same Category as this AttributeDesignator are provided.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="jsonFileLocation" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <p>
+                                Location of the file that contains the root JSON object. Must be resolvable to a file in the file system by Spring ResourceUtils#getFile(String) using the location as argument.
+                            </p>
+                            <p>
+                                In the location, you may use placeholders enclosed between
+                                <i>${</i>
+                                and
+                                <i>}</i>
+                                for the following properties:
+                            </p>
+                            <ul>
+                                <li>
+                                    The global property
+                                    <i>PARENT_DIR</i>
+                                    for
+                                    defining - in a generic way - a path relative to the
+                                    parent directory to the XML file where this is used;
+                                </li>
+                                <li>Java system properties;
+                                </li>
+                                <li>System environment variables.
+                                </li>
+                            </ul>
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:token">
+                            <xs:minLength value="1"></xs:minLength>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>
