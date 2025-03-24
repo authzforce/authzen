@@ -7,7 +7,7 @@
 		<version>9.1.0</version>
 	</parent>
 	<artifactId>authzforce-authzen</artifactId>
-	<version>0.2.0-SNAPSHOT</version>
+	<version>0.2.0</version>
 	<packaging>pom</packaging>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>AuthzForce CE - Parent project of OpenID AuthZEN modules</description>
